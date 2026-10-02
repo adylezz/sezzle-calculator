@@ -16,7 +16,7 @@ var operations = map[string]operation{
 	"divide":     {needsB: true, fn: calculator.Divide},
 	"power":      {needsB: true, fn: calculator.Power},
 	"percentage": {needsB: true, fn: calculator.Percentage},
-	"sqrt":       {needsB: true, fn: sqrt},
+	"sqrt":       {needsB: false, fn: sqrt},
 }
 
 // sqrt adapts calcularot. Sqrt to the two-operand signature
