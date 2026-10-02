@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"github.com/adylezz/sezzle-calculator/backend/internal/calculator"
@@ -27,6 +28,10 @@ func calculate(w http.ResponseWriter, r *http.Request) {
 	var req calculateRequest
 	if err := dec.Decode(&req); err != nil {
 		writeError(w, http.StatusBadRequest, "request body must be a JSON object with numeric fields")
+		return
+	}
+	if err := dec.Decode(&struct{}{}); err != io.EOF {
+		writeError(w, http.StatusBadRequest, "request body must be a JSON object")
 		return
 	}
 	if req.A == nil {
