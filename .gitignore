@@ -1,0 +1,16 @@
+# Node / frontend
+node_modules/
+dist/
+coverage/
+
+
+#Go
+*.exe
+coverage.out
+coverage.html
+
+
+# Entorno
+.env
+coverage.out
+coverage.html

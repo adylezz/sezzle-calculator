@@ -20,7 +20,7 @@ func checkResult(r float64) (float64, error) {
 	return r, nil
 }
 
-// Adition
+// Add returns a + b
 func Add(a, b float64) (float64, error) {
 	return checkResult(a + b)
 }
@@ -48,7 +48,7 @@ func Power(a, b float64) (float64, error) {
 	return checkResult(math.Pow(a, b))
 }
 
-// Square root of a + negative
+// Sqrt returns the square root of a. It returns ErrNegativeSqrt if a is negative.
 func Sqrt(a float64) (float64, error) {
 	if a < 0 {
 		return 0, ErrNegativeSqrt
