@@ -13,7 +13,7 @@ export function parseNumber(input: string): ParseResult {
         return { ok: false, error: 'Use a dot (.) as the decimal separator.'}
     }
     if (!NUMBER_PATTERN.test(text)) {
-        return { ok: false, error: 'Enter a valud number.'}
+        return { ok: false, error: 'Enter a valid number.'}
     }
     const value = Number(text)
     if (!Number.isFinite(value)) {
