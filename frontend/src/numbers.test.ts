@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
-import { formatResult, parseNumber } from './numbers'
+import { formatResult, parseNumber, toggleSign } from './numbers'
 
 describe('parseNumber', () => {
   it.each([
     ['42', 42],
     ['-3', -3],
     ['2.5', 2.5],
+    ['2,5', 2.5],
+    ['-1,25', -1.25],
     ['.5', 0.5],
+    [',5', 0.5],
     ['5.', 5],
     ['  7  ', 7],
     ['0', 0],
@@ -17,11 +20,12 @@ describe('parseNumber', () => {
   it.each([
     ['', 'This field is required.'],
     ['   ', 'This field is required.'],
-    ['2,5', 'Use a dot (.) as the decimal separator.'],
+    ['1,000.5', 'Use only one decimal separator.'],
+    ['1,2,3', 'Use only one decimal separator.'],
+    ['1.2.3', 'Use only one decimal separator.'],
     ['abc', 'Enter a valid number.'],
     ['1e3', 'Enter a valid number.'],
     ['+5', 'Enter a valid number.'],
-    ['1.2.3', 'Enter a valid number.'],
     ['-', 'Enter a valid number.'],
   ])('rejects %j', (input, error) => {
     expect(parseNumber(input)).toEqual({ ok: false, error })
@@ -32,6 +36,18 @@ describe('parseNumber', () => {
       ok: false,
       error: 'This number is too large.',
     })
+  })
+})
+
+describe('toggleSign', () => {
+  it.each([
+    ['5', '-5'],
+    ['-5', '5'],
+    ['', '-'],
+    ['-', ''],
+    [' 2.5 ', '-2.5'],
+  ])('turns %j into %j', (input, expected) => {
+    expect(toggleSign(input)).toBe(expected)
   })
 })
 
