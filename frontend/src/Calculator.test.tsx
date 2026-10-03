@@ -45,10 +45,10 @@ describe('Calculator', () => {
     render(<Calculator />)
 
     const inputA = screen.getByLabelText(/first number/i)
-    await user.type(inputA, '2,5')
+    await user.type(inputA, 'abc')
     await user.click(screen.getByRole('button', { name: /calculate/i }))
 
-    expect(screen.getByText('Use a dot (.) as the decimal separator.')).toBeInTheDocument()
+    expect(screen.getByText('Enter a valid number.')).toBeInTheDocument()
     expect(screen.getByText('This field is required.')).toBeInTheDocument()
     expect(inputA).toHaveAttribute('aria-invalid', 'true')
     expect(calculateMock).not.toHaveBeenCalled()
@@ -91,5 +91,43 @@ describe('Calculator', () => {
 
     await user.type(inputA, '1')
     expect(screen.queryByRole('status')).not.toBeInTheDocument()
+  })
+  it('accepts a comma as decimal separator', async () => {
+    calculateMock.mockResolvedValue(4.5)
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await user.type(screen.getByLabelText(/first number/i), '2,5')
+    await user.type(screen.getByLabelText(/second number/i), '2')
+    await user.click(screen.getByRole('button', { name: /calculate/i }))
+
+    expect(calculateMock).toHaveBeenCalledWith('add', 2.5, 2)
+  })
+
+  it('toggles the sign of a number', async () => {
+    calculateMock.mockResolvedValue(-2)
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    const inputA = screen.getByLabelText(/first number/i)
+    await user.type(inputA, '5')
+    await user.click(screen.getByRole('button', { name: 'Toggle sign of a' }))
+    expect(inputA).toHaveValue('-5')
+
+    await user.type(screen.getByLabelText(/second number/i), '3')
+    await user.click(screen.getByRole('button', { name: /calculate/i }))
+    expect(calculateMock).toHaveBeenCalledWith('add', -5, 3)
+  })
+
+  it('shows a generic message when the failure is not an Error', async () => {
+    calculateMock.mockRejectedValue('boom')
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await user.type(screen.getByLabelText(/first number/i), '1')
+    await user.type(screen.getByLabelText(/second number/i), '2')
+    await user.click(screen.getByRole('button', { name: /calculate/i }))
+
+    expect(await screen.findByRole('alert')).toHaveTextContent('Something went wrong.')
   })
 })

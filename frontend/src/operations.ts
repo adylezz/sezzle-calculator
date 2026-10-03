@@ -13,5 +13,5 @@ export const OPERATIONS: OperationOption[] = [
     { value: 'divide', label: 'Divide (a ÷ b)', needsB: true },
     { value: 'power', label: 'Power (a ^ b)', needsB: true },
     { value: 'percentage', label: 'Percentage (a% of b)', needsB: true },
-    { value: 'sqrt', label: 'Square Root (√a)', needsB: false },
+    { value: 'sqrt', label: 'Square root (√a)', needsB: false },
 ]
