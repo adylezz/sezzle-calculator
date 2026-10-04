@@ -104,7 +104,7 @@ describe('Calculator', () => {
     expect(calculateMock).toHaveBeenCalledWith('add', 2.5, 2)
   })
 
-  it('toggles the sign of a number', async () => {
+  it('toggles the sign of a', async () => {
     calculateMock.mockResolvedValue(-2)
     const user = userEvent.setup()
     render(<Calculator />)
@@ -117,6 +117,22 @@ describe('Calculator', () => {
     await user.type(screen.getByLabelText(/second number/i), '3')
     await user.click(screen.getByRole('button', { name: /calculate/i }))
     expect(calculateMock).toHaveBeenCalledWith('add', -5, 3)
+  })
+
+  it('toggles the sign of b', async () => {
+    calculateMock.mockResolvedValue(2)
+    const user = userEvent.setup()
+    render(<Calculator />)
+
+    await user.type(screen.getByLabelText(/first number/i), '5')
+
+    const inputB = screen.getByLabelText(/second number/i)
+    await user.type(inputB, '3')
+    await user.click(screen.getByRole('button', { name: 'Toggle sign of b' }))
+    expect(inputB).toHaveValue('-3')
+
+    await user.click(screen.getByRole('button', { name: /calculate/i }))
+    expect(calculateMock).toHaveBeenCalledWith('add', 5, -3)
   })
 
   it('shows a generic message when the failure is not an Error', async () => {
