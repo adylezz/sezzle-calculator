@@ -26,7 +26,7 @@ func run() error {
 
 	srv := &http.Server{
 		Addr:              ":" + port,
-		Handler:           api.NewRouter(),
+		Handler:           newHandler(os.Getenv("STATIC_DIR")),
 		ReadHeaderTimeout: 2 * time.Second,
 		ReadTimeout:       5 * time.Second,
 		WriteTimeout:      10 * time.Second,
@@ -52,4 +52,18 @@ func run() error {
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	return srv.Shutdown(shutdownCtx)
+}
+
+// newHandler returns the API router alone, or, when staticDir is set,
+// a mux that serves the API under /api/ and the frontend build everywhere else.
+func newHandler(staticDir string) http.Handler {
+	apiRouter := api.NewRouter()
+	if staticDir == "" {
+		return apiRouter
+	}
+
+	mux := http.NewServeMux()
+	mux.Handle("/api/", apiRouter)
+	mux.Handle("/", http.FileServer(http.Dir(staticDir)))
+	return mux
 }
