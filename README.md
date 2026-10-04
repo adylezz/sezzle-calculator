@@ -2,9 +2,9 @@
 
 A full-stack calculator: a **React + TypeScript** frontend that consumes a **Go** REST microservice. It supports addition, subtraction, multiplication and division, plus all three optional operations: exponentiation, square root and percentage.
 
-   <p align="center">
-     <img src="docs/screenshot.png" alt="Retro calculator window showing a result on its display" width="420">
-   </p>
+<p align="center">
+  <img src="docs/screenshot.png" alt="Retro calculator window showing a result on its display" width="420">
+</p>
 
 ## Contents
 
@@ -103,7 +103,7 @@ npm run lint
 |---|---|---|---|
 | Backend | `internal/calculator` | 100% | n/a |
 | Backend | `internal/api` | 100% | n/a |
-| Frontend | `src/` | [98.68]% | [98.3]% |
+| Frontend | `src/` | 100% | 98.3% |
 
 Generated HTML reports are not committed; the commands above regenerate them.
 
@@ -181,19 +181,22 @@ curl -X POST http://localhost:8080/api/percentage \
 curl -i -X POST http://localhost:8080/api/divide \
   -H "Content-Type: application/json" \
   -d '{"a": 1, "b": 0}'
-# [TODO: paste real response body]
+# HTTP/1.1 422 Unprocessable Entity
+# {"error":"division by zero"}
 
 # Missing field: 400
 curl -i -X POST http://localhost:8080/api/add \
   -H "Content-Type: application/json" \
   -d '{"a": 1}'
-# {"error":"missing required field \"b\""}
+# HTTP/1.1 400 Bad Request
+# {"error":"request body must be a JSON object with numeric fields"}
 
 # Unknown operation: 404
 curl -i -X POST http://localhost:8080/api/modulo \
   -H "Content-Type: application/json" \
   -d '{"a": 1, "b": 2}'
-# [TODO: paste real response body]
+# HTTP/1.1 404 Not Found
+# {"error":"unknown operation: modulo"}
 ```
 
 > **Windows (cmd):** single quotes don't work. Escape the inner quotes instead:
