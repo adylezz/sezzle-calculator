@@ -2,6 +2,9 @@
 
 A full-stack calculator: a **React + TypeScript** frontend that consumes a **Go** REST microservice. It supports addition, subtraction, multiplication and division, plus all three optional operations: exponentiation, square root and percentage.
 
+**Live demo:** <https://sezzle-calculator-zkfz.onrender.com>
+> Hosted on Render's free tier, which spins the service down after 15 minutes without traffic. The first request after that can take up to a minute while the container starts.
+
 <p align="center">
   <img src="docs/screenshot.png" alt="Retro calculator window showing a result on its display" width="420">
 </p>
@@ -77,6 +80,8 @@ Open <http://localhost:5173>. In development, Vite proxies every `/api` request 
 ### Run with Docker
 
 The Dockerfile builds the frontend and the backend in separate stages and produces a single minimal image in which the Go server serves both the API and the compiled frontend.
+
+The live demo runs this same image on Render, built directly from the Dockerfile.
 
 ```bash
 docker build -t sezzle-calculator .
