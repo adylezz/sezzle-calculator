@@ -74,6 +74,18 @@ npm run dev
 
 Open <http://localhost:5173>. In development, Vite proxies every `/api` request to `http://localhost:8080`, so the backend must be running.
 
+### Run with Docker
+
+The Dockerfile builds the frontend and the backend in separate stages and produces a single minimal image in which the Go server serves both the API and the compiled frontend.
+
+```bash
+docker build -t sezzle-calculator .
+docker run --rm -p 8080:8080 sezzle-calculator
+```
+
+Open <http://localhost:8080>. No Node.js or Go installation is needed on the host.
+
+
 ## Running the tests
 
 ### Backend
@@ -220,6 +232,8 @@ curl -i -X POST http://localhost:8080/api/modulo \
 - **Errors are always JSON.** Go's default 404 and 405 responses are plain text, so catch-all handlers return JSON errors and keep the contract consistent for clients.
 - **Production-minded server.** Explicit read, write and idle timeouts (Go's defaults have none, which leaves the server open to slow-client attacks), plus graceful shutdown on SIGINT/SIGTERM.
 - **float64 numbers.** Simple and native to both JSON and JavaScript. The trade-off is binary floating-point precision (`0.1 + 0.2 = 0.30000000000000004`). Arbitrary-precision decimals (e.g. `math/big`) were considered unnecessary for a general-purpose calculator; the UI rounds the displayed value instead (see below).
+- **Optional static file serving.** When `STATIC_DIR` is set, the server serves the frontend build at `/` and the API under `/api/`. When it is not set, it runs as an API only. The backend never depends on the frontend to compile or test.
+- **Multi-stage Docker build.** Node and Go are used only to build; the final image is distroless (no shell, no package manager) and runs as a non-root user. The server is PID 1, so `docker stop` triggers its graceful shutdown.
 
 ### Frontend
 
@@ -257,7 +271,6 @@ Each layer is tested at its boundary. There is no automated end-to-end test acro
 
 ## Known limitations and next steps
 
-- **Docker:** [TODO: remove this line if the Dockerfile ships]
 - **End-to-end tests** (e.g. Playwright) to cover the real frontend-backend integration.
 - **Request logging** and basic metrics in the backend.
 - **Arbitrary-precision arithmetic** if exact decimal results are ever required.
