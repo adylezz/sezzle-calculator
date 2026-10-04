@@ -143,7 +143,7 @@ Content-Type: application/json
 { "error": "human-readable message" }
 ```
 
-Every response, including errors from unknown routes, is JSON.
+Every response under `/api/`, including errors from unknown operations and routes, is JSON. When `STATIC_DIR` is set, paths outside `/api/` are served by the static file server instead.
 
 ### Status codes
 
